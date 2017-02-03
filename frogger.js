@@ -25,16 +25,65 @@ var gl;
 var score = 0;
 var nw; // constant to "normalize width"
 var lastTime = 0;
-//var xmove;
-//var ymove;
-//var leftarrowReleased = true;
-//var uparrowReleased = true;
-//var rightarrowReleased = true;
-//var downarrowReleased = true;
 
 var frogv; // frog position
-
 var frogc = vec4(0.0, 1.0, 0.0, 1.0); // frog color
+
+class Renderable {
+  constructor(name) {
+    this.name = name;
+  }
+
+  render() {
+    console.log('rendering: ', this.name);
+  }
+}
+
+class Position {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+class Frog extends Renderable {
+  constructor(pos) {
+    super('Frog');
+    this.pos = pos;
+    this.height = 40;
+    this.width = 40;
+    this.jumpDistance = jumpSize;
+    this.directions = {
+      NORTH: 0,
+      SOUTH: 1,
+    }
+    this.direction = this.directions.NORTH;
+  }
+
+  render() {
+    console.log('frog.render()');
+  }
+
+  moveDown() {
+    this.pos.y += frog.jumpDistance;
+    this.direction = this.directions.SOUTH;
+  }
+
+  moveUp() {
+    this.pos.y -= frog.jumpDistance;
+    this.directions = this.directions.NORTH;
+  }
+
+  moveRight() {
+    this.pos.x += frog.jumpDistance;
+  }
+
+  moveLeft() {
+    this.pos.x -= frog.jumpDistance;
+  }
+}
+
+///////////////// INITIALIZE GAME //////////////////////////
 
 window.onload = function init() {
   canvas = document.getElementById( "gl-canvas" );
