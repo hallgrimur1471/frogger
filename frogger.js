@@ -13,6 +13,7 @@
 // lane:                       800x100
 // car on lane:                   x080
 
+const MAX_TIME_BETWEEN_UPDATES_MS = 50;
 const LEFTARROW = 37;
 const UPARROW = 38;
 const RIGHTARROW = 39;
@@ -27,6 +28,7 @@ var canvas;
 var gl;
 var score = 0;
 var nw; // constant to "normalize width"
+var lastTime = 0;
 //var xmove;
 //var ymove;
 //var leftarrowReleased = true;
@@ -67,16 +69,38 @@ window.onload = function init() {
 
     window.addEventListener("keydown", e=> {
       if (e.repeat) {
-        else {
-          key[e.key] = true;
-        }
+      } else {
+          keys[e.key] = true;
       }
     });
     window.addEventListener("keyup", e=> {
       keys[e.key] = false;
     });
 
-    render();
+    // Start game
+    main();
+}
+
+function gameFunction(du) {
+  update(du);
+  render();
+  //render(ctx);
+}
+
+function update(du) {
+  if (checkKey(LEFTARROW)) {
+    // frog move left
+    console.log('move frog left');
+  }
+  if (checkKey(UPARROW)) {
+    // frog move up
+  }
+  if (checkKey(RIGHTARROW)) {
+    // frog move right
+  }
+  if (checkKey(DOWNARROW)) {
+    // frog move down
+  }
 }
 
 // eatKey :: Key => boolean
@@ -97,6 +121,27 @@ function eatKey(key) {
 function checkKey(key) {
   return keys[key];
 }
+
+running = true;
+function main(time) {
+  if (time === undefined) {
+    time = lastTime + MAX_TIME_BETWEEN_UPDATES_MS;
+  }
+  if (eatKey("p")) {
+    running = !running;
+  }
+  if (running) {
+    const du = time === undefined ? MAX_TIME_BETWEEN_UPDATES_MS : Math.min(time - lastTime, MAX_TIME_BETWEEN_UPDATES_MS);
+    lastTime = time;
+    if(isNaN(du)) {
+      gameFunction(MAX_TIME_BETWEEN_UPDATES_MS);
+    } else {
+      gameFunction(du);
+    }
+  }
+  requestAnimFrame(main);
+}
+
 
 //function moveFrog(e) {
 //  xmove = 0.0;
