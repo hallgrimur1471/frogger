@@ -21,17 +21,18 @@ const DOWNARROW = 40;
 const lanes = 5;
 const jumpSize = 2/(lanes + 2);
 const carHeight = 8/10 * jumpSize;
+const keys = [];
 
 var canvas;
 var gl;
 var score = 0;
 var nw; // constant to "normalize width"
-var xmove;
-var ymove;
-var leftarrowReleased = true;
-var uparrowReleased = true;
-var rightarrowReleased = true;
-var downarrowReleased = true;
+//var xmove;
+//var ymove;
+//var leftarrowReleased = true;
+//var uparrowReleased = true;
+//var rightarrowReleased = true;
+//var downarrowReleased = true;
 
 var frogv; // frog position
 
@@ -64,64 +65,91 @@ window.onload = function init() {
     // Get location of shader variable rcolor
     locColor = gl.getUniformLocation( program, "rcolor" );
 
-    window.addEventListener("keydown", moveFrog);
-    window.addEventListener("keyup", togglArrowkeyReleased);
+    window.addEventListener("keydown", e=> {
+      if (e.repeat) {
+        else {
+          key[e.key] = true;
+        }
+      }
+    });
+    window.addEventListener("keyup", e=> {
+      keys[e.key] = false;
+    });
 
     render();
 }
 
-function moveFrog(e) {
-  xmove = 0.0;
-  ymove = 0.0;
-  switch ( e.keyCode ) {
-    case LEFTARROW:
-      if ( leftarrowReleased ) {
-        leftarrowReleased = false;
-        xmove = -nw*jumpSize;
-        ymove = 0.0;
-      }
-      break;
-    case RIGHTARROW:
-      if ( rightarrowReleased ) {
-        rightarrowReleased = false;
-        xmove = nw*jumpSize;
-        ymove = 0.0;
-      }
-      break;
-    case UPARROW:
-      if ( uparrowReleased ) {
-        uparrowReleased = false;
-        xmove = 0.0;
-        ymove = jumpSize;
-      }
-      break;
-    case DOWNARROW:
-      if ( downarrowReleased ) {
-        downarrowReleased = false;
-        xmove = 0.0;
-        ymove = -jumpSize;
-      }
-      break;
+// eatKey :: Key => boolean
+// Returns true if "key" was down, and disables it
+// returns false otherwise
+function eatKey(key) {
+  if (keys[key]) {
+    keys[key] = false;
+    return true;
+  } else {
+    return false;
   }
-  for(i=0; i<frogv.length; i++) {
-    frogv[i][0] += xmove;
-    frogv[i][1] += ymove;
-  }
-  gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(frogv));
 }
 
-function togglArrowkeyReleased(e) {
-  switch ( e.keyCode ) {
-    case LEFTARROW:
-      leftarrowReleased = true;
-    case UPARROW:
-      uparrowReleased = true;
-    case RIGHTARROW:
-      rightarrowReleased = true;
-    case DOWNARROW:
-      downarrowReleased = true;
-  }
+// checkKey :: key => Boolean
+// Returns true if "key" is down
+// returns false otherwise.
+function checkKey(key) {
+  return keys[key];
 }
+
+//function moveFrog(e) {
+//  xmove = 0.0;
+//  ymove = 0.0;
+//  switch ( e.keyCode ) {
+//    case LEFTARROW:
+//      if ( leftarrowReleased ) {
+//        leftarrowReleased = false;
+//        xmove = -nw*jumpSize;
+//        ymove = 0.0;
+//      }
+//      break;
+//    case RIGHTARROW:
+//      if ( rightarrowReleased ) {
+//        rightarrowReleased = false;
+//        xmove = nw*jumpSize;
+//        ymove = 0.0;
+//      }
+//      break;
+//    case UPARROW:
+//      if ( uparrowReleased ) {
+//        uparrowReleased = false;
+//        xmove = 0.0;
+//        ymove = jumpSize;
+//      }
+//      break;
+//    case DOWNARROW:
+//      if ( downarrowReleased ) {
+//        downarrowReleased = false;
+//        xmove = 0.0;
+//        ymove = -jumpSize;
+//      }
+//      break;
+//  }
+//  for(i=0; i<frogv.length; i++) {
+//    frogv[i][0] += xmove;
+//    frogv[i][1] += ymove;
+//  }
+//  gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(frogv));
+//}
+
+//function togglArrowkeyReleased(e) {
+//  switch ( e.keyCode ) {
+//    case LEFTARROW:
+//      leftarrowReleased = true;
+//    case UPARROW:
+//      uparrowReleased = true;
+//    case RIGHTARROW:
+//      rightarrowReleased = true;
+//    case DOWNARROW:
+//      downarrowReleased = true;
+//  }
+//}
 
 function initFrog() {
     // initialize frog position
