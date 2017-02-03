@@ -14,10 +14,6 @@
 // car on lane:                   x080
 
 const MAX_TIME_BETWEEN_UPDATES_MS = 50;
-const LEFTARROW = 37;
-const UPARROW = 38;
-const RIGHTARROW = 39;
-const DOWNARROW = 40;
 
 const lanes = 5;
 const jumpSize = 2/(lanes + 2);
@@ -88,17 +84,18 @@ function gameFunction(du) {
 }
 
 function update(du) {
-  if (checkKey(LEFTARROW)) {
+  if (checkKey("ArrowLeft")) {
     // frog move left
     console.log('move frog left');
   }
-  if (checkKey(UPARROW)) {
-    // frog move up
-  }
-  if (checkKey(RIGHTARROW)) {
+  if (checkKey("ArrowRight")) {
     // frog move right
   }
-  if (checkKey(DOWNARROW)) {
+  if (eatKey("ArrowUp")) {
+    // frog move up
+    console.log('move frog up');
+  }
+  if (eatKey("ArrowDown")) {
     // frog move down
   }
 }
@@ -141,60 +138,6 @@ function main(time) {
   }
   requestAnimFrame(main);
 }
-
-
-//function moveFrog(e) {
-//  xmove = 0.0;
-//  ymove = 0.0;
-//  switch ( e.keyCode ) {
-//    case LEFTARROW:
-//      if ( leftarrowReleased ) {
-//        leftarrowReleased = false;
-//        xmove = -nw*jumpSize;
-//        ymove = 0.0;
-//      }
-//      break;
-//    case RIGHTARROW:
-//      if ( rightarrowReleased ) {
-//        rightarrowReleased = false;
-//        xmove = nw*jumpSize;
-//        ymove = 0.0;
-//      }
-//      break;
-//    case UPARROW:
-//      if ( uparrowReleased ) {
-//        uparrowReleased = false;
-//        xmove = 0.0;
-//        ymove = jumpSize;
-//      }
-//      break;
-//    case DOWNARROW:
-//      if ( downarrowReleased ) {
-//        downarrowReleased = false;
-//        xmove = 0.0;
-//        ymove = -jumpSize;
-//      }
-//      break;
-//  }
-//  for(i=0; i<frogv.length; i++) {
-//    frogv[i][0] += xmove;
-//    frogv[i][1] += ymove;
-//  }
-//  gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(frogv));
-//}
-
-//function togglArrowkeyReleased(e) {
-//  switch ( e.keyCode ) {
-//    case LEFTARROW:
-//      leftarrowReleased = true;
-//    case UPARROW:
-//      uparrowReleased = true;
-//    case RIGHTARROW:
-//      rightarrowReleased = true;
-//    case DOWNARROW:
-//      downarrowReleased = true;
-//  }
-//}
 
 function initFrog() {
     // initialize frog position
