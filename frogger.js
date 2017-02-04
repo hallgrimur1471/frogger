@@ -83,6 +83,28 @@ class Frog extends Renderable {
   }
 }
 
+class EntityManager {
+  constructor() {
+    this.entities = [];
+  }
+
+  add(entity) {
+    this.entities.push(entity);
+  }
+
+  remove(entity) {
+    this.entities = this.entities.filter(e=>(e !== entity));
+  }
+
+  renderEntities() {
+    this.entities.forEach(e=>{
+      if (e instanceof Renderable) {
+        e.render();
+      }
+    });
+  }
+}
+
 ///////////////// INITIALIZE GAME //////////////////////////
 
 window.onload = function init() {
