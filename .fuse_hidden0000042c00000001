@@ -15,9 +15,8 @@
 
 const MAX_TIME_BETWEEN_UPDATES_MS = 50;
 
-const xFields = 15;
-const yFields = 8;
-const jumpSize = 2/(yFields-1);
+const lanes = 5;
+const jumpSize = 2/(lanes + 2);
 const carHeight = 8/10 * jumpSize;
 const keys = [];
 
@@ -32,11 +31,6 @@ var frogc = vec4(0.0, 1.0, 0.0, 1.0); // frog color
 var bufferIdFrog;
 var locPosition;
 var locColor;
-
-function glCoordinates(xfield, yfield) {
-  return [-1 + (xfield-1)*(2.0/xFields),
-          -1 + (yfield-1)*(2.0/yFields)];
-}
 
 class Renderable {
   constructor(name) {
@@ -55,13 +49,6 @@ class Position {
   }
 }
 
-class Gameboard {
-  constructor(xfields, yfields) {
-    this.xfields = yfields;
-    this.xfields = yfields;
-  }
-}
-
 class Frog extends Renderable {
   constructor(pos) {
     super('Frog');
@@ -77,14 +64,9 @@ class Frog extends Renderable {
   }
 
   render() {
-    var glx = -1 + (this.pos.x-1)*(2.0/(xFields-1));
-    var gly = -1 + (this.pos.y-1)*(2.0/(yFields-1));
-    frogv = [ vec2( glx, gly ),
-              vec2( glx+nw*jumpSize, gly ),
-              vec2( glx+nw*jumpSize/2, gly+jumpSize ) ];
+    console.log('frog.render()');
 
     gl.bindBuffer( gl.ARRAY_BUFFER, bufferIdFrog ); // bind buffer
-    gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(frogv));
     gl.vertexAttribPointer( locPosition, 2, gl.FLOAT, false, 0, 0 );
     gl.uniform4fv( locColor, flatten(frogc) );
     gl.drawArrays( gl.TRIANGLES, 0, 3 );
@@ -134,7 +116,6 @@ class EntityManager {
 ///////////////// INITIALIZE GAME //////////////////////////
 const entityManager = new EntityManager();
 
-const gameboard = new Gameboard(10,10);
 const frog = new Frog(new Position(1,1));
 entityManager.add(frog);
 
@@ -244,11 +225,11 @@ function main(time) {
 }
 
 function initFrog() {
-  // initialize frog position
-  frogv = [ vec2( -1, -1 ),
-            vec2( -1+nw*jumpSize, -1 ),
-            vec2( -1+nw*jumpSize/2, -1+jumpSize ) ];
-}
+    // initialize frog position
+    frogv = [ vec2( -1, -1 ),
+              vec2( -1+nw*jumpSize, -1 ),
+              vec2( -1+nw*jumpSize/2, -1+jumpSize ) ];
+  }
 
 function render() {
   gl.clear( gl.COLOR_BUFFER_BIT );
