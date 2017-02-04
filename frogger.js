@@ -52,7 +52,7 @@ class Frog extends Renderable {
     this.pos = pos;
     this.height = 40;
     this.width = 40;
-    this.jumpDistance = jumpSize;
+    this.jumpDistance = 1;
     this.directions = {
       NORTH: 0,
       SOUTH: 1,
@@ -65,13 +65,13 @@ class Frog extends Renderable {
   }
 
   moveDown() {
-    this.pos.y += frog.jumpDistance;
+    this.pos.y -= frog.jumpDistance;
     this.direction = this.directions.SOUTH;
   }
 
   moveUp() {
-    this.pos.y -= frog.jumpDistance;
-    this.directions = this.directions.NORTH;
+    this.pos.y += frog.jumpDistance;
+    this.direction = this.directions.NORTH;
   }
 
   moveRight() {
@@ -106,6 +106,10 @@ class EntityManager {
 }
 
 ///////////////// INITIALIZE GAME //////////////////////////
+const entityManager = new EntityManager();
+
+const frog = new Frog(new Position(1,1));
+entityManager.add(frog);
 
 window.onload = function init() {
   canvas = document.getElementById( "gl-canvas" );
@@ -155,19 +159,21 @@ function gameFunction(du) {
 }
 
 function update(du) {
-  if (checkKey("ArrowLeft")) {
-    // frog move left
-    console.log('move frog left');
+  if (eatKey("ArrowLeft")) {
+    frog.moveLeft();
+    console.log(frog.pos.x, frog.pos.y);
   }
-  if (checkKey("ArrowRight")) {
-    // frog move right
+  if (eatKey("ArrowRight")) {
+    frog.moveRight();
+    console.log(frog.pos.x, frog.pos.y);
   }
   if (eatKey("ArrowUp")) {
-    // frog move up
-    console.log('move frog up');
+    frog.moveUp();
+    console.log(frog.pos.x, frog.pos.y);
   }
   if (eatKey("ArrowDown")) {
-    // frog move down
+    frog.moveDown();
+    console.log(frog.pos.x, frog.pos.y);
   }
 }
 
@@ -213,8 +219,8 @@ function main(time) {
 function initFrog() {
     // initialize frog position
     frogv = [ vec2( -1, -1 ),
-    vec2( -1+nw*jumpSize, -1 ),
-    vec2( -1+nw*jumpSize/2, -1+jumpSize ) ];
+              vec2( -1+nw*jumpSize, -1 ),
+              vec2( -1+nw*jumpSize/2, -1+jumpSize ) ];
   }
 
 function render() {
